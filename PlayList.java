@@ -50,9 +50,8 @@ class PlayList {
         StringBuilder sb = new StringBuilder();
         
         for (int i = 0; i < size; i++) {
-            sb.append(tracks[i].getArtist()).append(", ");
-            sb.append(tracks[i].getTitle()).append(", ");
-            sb.append(tracks[i].getDuration()).append("/n");
+            sb.append(tracks[i].toString());
+            sb.append("\n");
             // 
             // Maybe I need to change to tracks[i].toString
             //
@@ -110,8 +109,8 @@ class PlayList {
         }
 
         size++;
-        for (int j = i + 1; j < size; j++) {
-            tracks[j] = tracks[i];
+        for (int j = size - 1; j > i; j--) {
+            tracks[j] = tracks[j - 1];
         }
         tracks[i] = track;
         
@@ -131,8 +130,8 @@ class PlayList {
             //?
         }
 
-        for (int j = i; j < size; j++) {
-            tracks[j] = tracks[j];
+        for (int j = i; j < size - 1; j++) {
+            tracks[j] = tracks[j + 1];
         }
         size--;
 
@@ -164,7 +163,6 @@ class PlayList {
         for (int i = 0; i < other.size; i++) {
             this.add(other.getTrack(i));
         }
-        size += other.getSize();
     }
 
     /** Returns the index in this list of the track that has the shortest duration,
@@ -179,9 +177,9 @@ class PlayList {
         else if (start == size - 1)
             return start;
 
-        int minDurationTrack = 0;
+        int minDurationTrack = start;
         for (int i = start; i < size - 1; i++) {
-            if ( tracks[i + 1].getDuration() < tracks[i].getDuration() ) {
+            if ( tracks[i + 1].getDuration() < tracks[minDurationTrack].getDuration() ) {
                 minDurationTrack = i + 1;
             }
         }
@@ -201,9 +199,10 @@ class PlayList {
     public void sortedInPlace() {
         Track temp = new Track(null, null, 0);
         for (int i = 0; i < size; i++) {
+            int minIndex = this.minIndex(i);
             temp = tracks[i];
-            tracks[i] = this.getTrack(minIndex(i));
-            tracks[minIndex(i)] = temp;
+            tracks[i] = this.getTrack(minIndex);
+            tracks[minIndex] = temp;
         }
         
     }
